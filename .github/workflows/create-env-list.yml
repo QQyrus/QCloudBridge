@@ -1,0 +1,47 @@
+name: Create an Encrypted Secret Text file with Env name and its QB version
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  create_encrypt_secret:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run script
+      run: |
+        cd $GITHUB_WORKSPACE
+        
+      env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+    
+    - name: List Files
+      run: ls
+      
+    - name: Commit and push changes for newly created txt file
+      run: |
+        cd $GITHUB_WORKSPACE
+        git config --global user.email "punithn@quinnox.com"
+        git config --global user.name "npunith"
+        
+        git add secretEnvList.txt
+        git commit -m "Add encrypted secret text file"
+        
+        git push origin staging
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+
